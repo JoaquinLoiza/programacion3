@@ -52,8 +52,10 @@ public class Main {
 		l1.insertFront(5);
 		l1.insertFront(8);
 		l1.insertFront(1);
+		l1.insertFront(0);
 		l1.insertFront(1);
 		l1.insertFront(6);
+		l1.insertFront(9);
 		
 		MySimpleLinkedList<Integer> l2 = new MySimpleLinkedList<Integer>();
 		l2.insertFront(6);
@@ -66,13 +68,22 @@ public class Main {
 		
 		MySimpleLinkedList<Integer> orderedList = new MySimpleLinkedList<Integer>();
 		ListCombiner<Integer> lc = new ListCombiner<Integer>(l1, l2);
-		orderedList = lc.getCommonOrderedList();
 		
+		System.out.println("------Ejer 6------");
+		orderedList = lc.getCommonOrderedList();
 		Iterator<Integer> it2 = orderedList.iterator();
 		while(it2.hasNext()) {
 			int valor = it2.next();
 			System.out.println(valor);
 		}
-	
+		
+		System.out.println("------Ejer 7------");
+		orderedList = lc.getElementOnlyFirstList();
+		Iterator<Integer> it3 = orderedList.iterator();
+		while(it3.hasNext()) {
+			int valor = it3.next();
+			System.out.println(valor);
+		}
+		
 	}
 }

@@ -1,8 +1,8 @@
 
 public class ListCombiner<T> {
 	
-	MySimpleLinkedList<T> list1;
-	MySimpleLinkedList<T> list2;
+	private MySimpleLinkedList<T> list1;
+	private MySimpleLinkedList<T> list2;
 	
 	public ListCombiner(MySimpleLinkedList<T> list1, MySimpleLinkedList<T> list2) {
 		this.list1 = list1;
@@ -68,6 +68,20 @@ public class ListCombiner<T> {
 			cursor = cursor.getNext();
 			pos ++;
 		}
+		return aux;
+	}
+	
+	public MySimpleLinkedList<T> getElementOnlyFirstList() {
+		MySimpleLinkedList<T> aux = new MySimpleLinkedList<T>();
+		int pos = 0;
+		
+		while(pos < this.list1.size()) {
+			if( !containElement(list2, this.list1.get(pos)) ) {
+				aux.insertFront(list1.get(pos));
+			}
+			pos ++;
+		}
+		
 		return aux;
 	}
 }
