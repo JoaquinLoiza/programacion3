@@ -64,15 +64,15 @@ public class Main {
 		l2.insertFront(1);
 		l2.insertFront(8);
 		
-		MySimpleLinkedList<Integer> l = new MySimpleLinkedList<Integer>();
-		l = l.commonList(l1, l2);
+		MySimpleLinkedList<Integer> orderedList = new MySimpleLinkedList<Integer>();
+		ListCombiner<Integer> lc = new ListCombiner<Integer>(l1, l2);
+		orderedList = lc.getCommonOrderedList();
 		
-		Iterator<Integer> it2 = l.iterator();
+		Iterator<Integer> it2 = orderedList.iterator();
 		while(it2.hasNext()) {
 			int valor = it2.next();
 			System.out.println(valor);
 		}
 	
 	}
-
 }
