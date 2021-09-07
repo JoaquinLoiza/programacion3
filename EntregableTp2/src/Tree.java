@@ -45,18 +45,25 @@ public class Tree {
 	}
 	
 	private boolean hasElement(Integer e, Tree t) {
+		if (getNode(e,t) != null) {
+			return true;
+		} else
+			return false;
+	}
+	
+	private Tree getNode(Integer e, Tree t) {
 		
-		boolean aux = false;
+		Tree aux = null;
 		
 		if (t.value != null) {
 			if(t.value == e) {
-				aux = true;
+				aux = t;
 			} 
 			else if (e < t.value && t.left != null) {
-				aux = hasElement(e, t.left); 
+				aux = getNode(e, t.left); 
 			} 
 			else if (e > t.value && t.right != null){
-				aux = hasElement(e, t.right);
+				aux = getNode(e, t.right);
 			}
 		}
 		return aux;
@@ -67,32 +74,25 @@ public class Tree {
 	}
 	
 	private boolean delete(Integer i, Tree t) {
-		
 		boolean aux = false;
+		Tree arbol = getNode(i, t);
 		
-		if(t.value == i) {
-			if(t.left == null && t.right == null) {
-				System.out.println("No tengo hijos");
+		if (arbol != null) {
+			if(arbol.left == null && arbol.right == null) {
 				t.value = null;
 			}
-			else if(t.left != null && t.right != null) {
+			else if(arbol.left != null && arbol.right != null) {
 				System.out.println("Tengo dos hijos");
 			} 
 			else {
-				if(t.left != null) {
+				if(arbol.left != null) {
 					System.out.println("Tengo un hijo izq");
 				} 
 				else
 					System.out.println("Tengo un hijo der");
 			}
 			aux = true;
-		} 
-		else if (i < t.value && t.left != null) {
-			aux = delete(i, t.left); 
-		} 
-		else if (i > t.value && t.right != null){
-			aux = delete(i, t.right);
-		}	
+		}
 		
 		return aux;
 	}
