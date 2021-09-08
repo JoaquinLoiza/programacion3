@@ -4,11 +4,13 @@ public class Tree {
 	private Integer value;
 	private Tree left;
 	private Tree right;
+	private Tree father;
 
 	public Tree(Integer value) {
 		this.value = value;
 		this.left = null;
 		this.right = null;
+		this.father = null;
 	}
 	
 	public void add(Integer newValue) {
@@ -16,13 +18,19 @@ public class Tree {
 			this.value = newValue;
 		else {
 			if (this.value > newValue) {
-				if (this.left == null)
-					this.left = new Tree(newValue);
+				if (this.left == null) {
+					Tree arbol = new Tree(newValue);
+					this.left = arbol;
+					arbol.father = this;
+				}
 				else
 					this.left.add(newValue);
 			} else if (this.value < newValue) {
-				if (this.right == null)
-					this.right = new Tree(newValue);
+				if (this.right == null) {					
+					Tree arbol = new Tree(newValue);
+					this.right = arbol;
+					arbol.father = this;
+				}
 				else
 					this.right.add(newValue);
 			}
@@ -76,24 +84,123 @@ public class Tree {
 	private boolean delete(Integer i, Tree t) {
 		boolean aux = false;
 		Tree arbol = getNode(i, t);
-		
+				
 		if (arbol != null) {
 			if(arbol.left == null && arbol.right == null) {
-				t.value = null;
+				if(arbol.father.value > arbol.value) {
+					arbol.father.left = null;
+				} else {
+					arbol.father.right = null;
+				}
+				arbol.value = null;
 			}
 			else if(arbol.left != null && arbol.right != null) {
-				System.out.println("Tengo dos hijos");
+				deleteWithChilds(arbol);
 			} 
 			else {
 				if(arbol.left != null) {
-					System.out.println("Tengo un hijo izq");
+					deleteWithLeftChild(arbol);
 				} 
 				else
-					System.out.println("Tengo un hijo der");
+					deleteWithRightChild(arbol);
 			}
 			aux = true;
 		}
-		
 		return aux;
+	}
+	
+	private void deleteWithLeftChild(Tree a) {
+		if(a.father != null) {
+			if (a.value > a.father.value) {
+				a.father.right = a.left;
+			} else
+				a.father.left = a.left;
+		} else {
+			a = a.left;
+		}
+	}
+	
+	private void deleteWithRightChild(Tree a) {
+		if(a.father != null) {
+			if (a.value > a.father.value) {
+				a.father.right = a.right;
+			} else
+				a.father.left = a.right;
+		} else {
+			a = a.right;
+		}
+	}
+	
+	private void deleteWithChilds(Tree a) {
+		Tree aux = findNML(a.right);
+		a.value = aux.value;
+		delete(a.value ,aux);
+	}
+	
+	private Tree findNML(Tree a) {
+		if(a.left != null) {
+			return findNML(a.left);
+		} else
+			return a;
+	}
+	
+	public void printPreOrder() {
+		printPreOrder(this);
+	}
+	
+	private void printPreOrder(Tree t) {
+		if(t == null) {
+			return;
+		}
+		
+		System.out.println(t.value);
+		printPreOrder(t.left);
+		printPreOrder(t.right);
+	}
+	
+	public void printPostOrder() {
+		printPostOrder(this);
+	}
+	
+	private void printPostOrder(Tree t) {
+		if(t == null) {
+			return;
+		}
+		
+		printPostOrder(t.left);
+		printPostOrder(t.right);
+		System.out.println(t.value);
+	}
+	
+	public void printOrder() {
+		printOrder(this);
+	}
+	
+	private void printOrder(Tree t) {
+		if(t == null) {
+			return;
+		}
+		
+		printOrder(t.left);
+		System.out.println(t.value);
+		printOrder(t.right);
+	}
+	
+	public int getHeight() {
+		return getHeight(this);
+	}
+
+	private int getHeight(Tree t) {
+		int x = 0;
+		if(t.right != null || t.left != null) {
+			if(t.left != null) {
+				x = getHeight(t.left);
+			}
+			else {
+				x = getHeight(t.right);
+			}
+			x++;
+		}
+		return x;
 	}
 }
