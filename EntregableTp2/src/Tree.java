@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Tree {
 
@@ -35,6 +36,11 @@ public class Tree {
 					this.right.add(newValue);
 			}
 		}
+	}
+	
+	public Integer getValue() {
+		int v = this.value;
+		return v;
 	}
 	
 	public boolean isEmpty() {
@@ -83,65 +89,70 @@ public class Tree {
 	
 	private boolean delete(Integer i, Tree t) {
 		boolean aux = false;
-		Tree arbol = getNode(i, t);
+		Tree tree = getNode(i, t);
 				
-		if (arbol != null) {
-			if(arbol.left == null && arbol.right == null) {
-				if(arbol.father.value > arbol.value) {
-					arbol.father.left = null;
+		if (tree != null) {
+			if(tree.left == null && tree.right == null) {
+				if(tree.father.value > tree.value) {
+					tree.father.left = null;
 				} else {
-					arbol.father.right = null;
+					tree.father.right = null;
 				}
-				arbol.value = null;
+				tree.value = null;
 			}
-			else if(arbol.left != null && arbol.right != null) {
-				deleteWithChilds(arbol);
+			else if(tree.left != null && tree.right != null) {
+				deleteWithChilds(tree);
 			} 
 			else {
-				if(arbol.left != null) {
-					deleteWithLeftChild(arbol);
+				if(tree.left != null) {
+					deleteWithLeftChild(tree);
 				} 
 				else
-					deleteWithRightChild(arbol);
+					deleteWithRightChild(tree);
 			}
 			aux = true;
 		}
 		return aux;
 	}
 	
-	private void deleteWithLeftChild(Tree a) {
-		if(a.father != null) {
-			if (a.value > a.father.value) {
-				a.father.right = a.left;
+	private void deleteWithLeftChild(Tree t) {
+		if(t.father != null) {
+			if (t.value > t.father.value) {
+				t.father.right = t.left;
 			} else
-				a.father.left = a.left;
+				t.father.left = t.left;
 		} else {
-			a = a.left;
+			t = t.left;
 		}
 	}
 	
-	private void deleteWithRightChild(Tree a) {
-		if(a.father != null) {
-			if (a.value > a.father.value) {
-				a.father.right = a.right;
+	private void deleteWithRightChild(Tree t) {
+		if(t.father != null) {
+			if (t.value >= t.father.value) {
+				t.father.right = t.right;
 			} else
-				a.father.left = a.right;
+				t.father.left = t.right;
 		} else {
-			a = a.right;
+			t = t.right;
 		}
 	}
 	
-	private void deleteWithChilds(Tree a) {
-		Tree aux = findNML(a.right);
-		a.value = aux.value;
-		delete(a.value ,aux);
+	private void deleteWithChilds(Tree t) {
+		Tree aux = FindLeftmostRightNode(t.right);
+		System.out.println("arbol con dos hijos "+ t.value+"\n");    // value = 6
+		System.out.println("nodo derecho mas a la izquierda "+ aux.value +"\n"); // value = 9
+		
+		// 6 se vuelve 9
+		t.value = aux.value;
+			//  
+		delete(aux.value ,aux);
 	}
 	
-	private Tree findNML(Tree a) {
-		if(a.left != null) {
-			return findNML(a.left);
+	private Tree FindLeftmostRightNode(Tree t) {
+		if(t.left != null) {
+			return FindLeftmostRightNode(t.left);
 		} else
-			return a;
+			return t;
 	}
 	
 	public void printPreOrder() {
@@ -191,16 +202,44 @@ public class Tree {
 	}
 
 	private int getHeight(Tree t) {
-		int x = 0;
-		if(t.right != null || t.left != null) {
-			if(t.left != null) {
-				x = getHeight(t.left);
-			}
-			else {
-				x = getHeight(t.right);
-			}
-			x++;
+		int l = 0;
+		int r = 0;
+		
+		if(t.left != null) {
+			l = t.left.getHeight(t.left) + 1;
 		}
-		return x;
+		
+		if(t.right != null) {
+			r = t.right.getHeight(t.right) + 1;
+		}
+		
+		if (l > r )
+			return l;
+		else
+			return r;
+	}
+	
+	public ArrayList<Tree> getLongestBranch() {
+		return getLongestBranch(this);
+	}
+	
+	private ArrayList<Tree> getLongestBranch(Tree t) {
+		ArrayList<Tree> branchL = new ArrayList<>();
+		ArrayList<Tree> branchR = new ArrayList<>();
+		branchL.add(t);
+		branchR.add(t);
+		
+		if(t.left != null) {
+			branchL.addAll(t.left.getLongestBranch(t.left));
+		}
+		
+		if(t.right != null) {
+			branchR.addAll(t.right.getLongestBranch(t.right));
+		}	
+		
+		if (branchL.size() >= branchR.size()) {			
+			return branchL;
+		} else
+			return branchR;
 	}
 }
