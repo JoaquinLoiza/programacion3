@@ -242,4 +242,39 @@ public class Tree {
 		} else
 			return branchR;
 	}
+	
+	public ArrayList<Tree> getFrontier(){
+		ArrayList<Tree> leaves = getFrontier(this);
+		return leaves;
+	}
+	
+	private ArrayList<Tree> getFrontier(Tree t) {
+		ArrayList<Tree> aux = new ArrayList<>();
+		if(t != null) {
+			if (t.left==null && t.right == null) {
+				aux.add(t);
+			}
+			else {
+				if(t.left != null) {
+					aux.addAll(getFrontier(t.left));
+				}
+				if (t.right != null) {
+					aux.addAll(getFrontier(t.right));
+				}
+			}
+		}
+		return aux;
+	}
+	
+	public Integer getMaxElem() {
+		return getMaxElem(this);
+	}
+
+	private Integer getMaxElem(Tree t) {
+		Integer x = t.value;
+		if(t.right != null) {
+			x = getMaxElem(t.right);
+		}
+		return x;
+	}
 }
