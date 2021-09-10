@@ -14,6 +14,17 @@ public class Tree {
 		this.father = null;
 	}
 	
+	// O(h*n)
+	// Al ser O(h) la complejidad del metodo 'add', se ejecutará 1 vez por cada 
+	// elemento del array, haciendo que la complejidad del metodo resulte en O(h*n).
+	public Tree(int[] array) {
+		for(int value: array) {
+			this.add(value);
+		}
+	}
+	
+	// O(h) Porque depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
 	public void add(Integer newValue) {
 		if (this.value == null)
 			this.value = newValue;
@@ -38,15 +49,21 @@ public class Tree {
 		}
 	}
 	
+	// O(1);
+	// Donde se realiza un solo acceso a memoria.
 	public Integer getValue() {
 		int v = this.value;
 		return v;
 	}
 	
+	// O(1)
+	// Donde se compara el valor con un solo acceso a memoria.
 	public boolean isEmpty() {
 		return (this.value == null);
 	}
 	
+	// O(1)
+	// Donde se compara el valor con un solo acceso a memoria.
 	public Integer getRoot() {
 		if (this.value != null) {			
 			return this.value;
@@ -54,6 +71,9 @@ public class Tree {
 			return -1;
 	}
 	
+	// O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
 	public boolean hasElement(Integer e) {
 		return hasElement(e, this);
 	}
@@ -65,6 +85,9 @@ public class Tree {
 			return false;
 	}
 	
+	// O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
 	private Tree getNode(Integer e, Tree t) {
 		
 		Tree aux = null;
@@ -83,6 +106,12 @@ public class Tree {
 		return aux;
 	}
 	
+	// O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
+	// para esta complejidad se tuvieron en cuenta, todos los metodos
+	// delete (los 3 casos) y el metodo que busca el nodo mas a la
+	// izquierda del brazo derecho.
 	public boolean delete(Integer i) {
 		return delete(i, this);
 	}
@@ -139,15 +168,11 @@ public class Tree {
 	
 	private void deleteWithChilds(Tree t) {
 		Tree aux = FindLeftmostRightNode(t.right);
-		System.out.println("arbol con dos hijos "+ t.value+"\n");    // value = 6
-		System.out.println("nodo derecho mas a la izquierda "+ aux.value +"\n"); // value = 9
-		
-		// 6 se vuelve 9
 		t.value = aux.value;
-			//  
 		delete(aux.value ,aux);
 	}
 	
+	// O(h) porque no estamos seguros de que nuestro arbol este balanceado.
 	private Tree FindLeftmostRightNode(Tree t) {
 		if(t.left != null) {
 			return FindLeftmostRightNode(t.left);
@@ -155,6 +180,9 @@ public class Tree {
 			return t;
 	}
 	
+	//O(n)
+	// Para todos los metodos de impresion (pre order, post order y order) 
+	// ya que en todos los casos debemos recorrer todos los nodos del arbol.
 	public void printPreOrder() {
 		printPreOrder(this);
 	}
@@ -162,11 +190,18 @@ public class Tree {
 	private void printPreOrder(Tree t) {
 		if(t == null) {
 			return;
-		}
+		}	
+		System.out.print(t.value+" ");
 		
-		System.out.println(t.value);
-		printPreOrder(t.left);
-		printPreOrder(t.right);
+		if(t.left != null)			
+			printPreOrder(t.left);
+		else
+			System.out.print("- ");
+		
+		if(t.right != null)			
+			printPreOrder(t.right);
+		else
+			System.out.print("- ");
 	}
 	
 	public void printPostOrder() {
@@ -196,7 +231,10 @@ public class Tree {
 		System.out.println(t.value);
 		printOrder(t.right);
 	}
-	
+
+	//O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
 	public int getHeight() {
 		return getHeight(this);
 	}
@@ -219,6 +257,9 @@ public class Tree {
 			return r;
 	}
 	
+	//O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.	
 	public ArrayList<Tree> getLongestBranch() {
 		return getLongestBranch(this);
 	}
@@ -243,9 +284,25 @@ public class Tree {
 			return branchR;
 	}
 	
+	//O(h)
+	// Depende de la altura del arbol, ya que no tenemos certeza de que
+	// el arbol se encuntre bien balanzeado.
+	public Integer getMaxElem() {
+		return getMaxElem(this);
+	}
+
+	private Integer getMaxElem(Tree t) {
+		Integer aux = t.value;
+		if(t.right != null) {
+			aux = getMaxElem(t.right);
+		} 
+		return aux;
+	}
+	
+	//O(n)
+	//Ya que recorrera todos los nodos hasta llegar a cada una de las hojas.
 	public ArrayList<Tree> getFrontier(){
-		ArrayList<Tree> leaves = getFrontier(this);
-		return leaves;
+		  return getFrontier(this);
 	}
 	
 	private ArrayList<Tree> getFrontier(Tree t) {
@@ -265,16 +322,47 @@ public class Tree {
 		}
 		return aux;
 	}
-	
-	public Integer getMaxElem() {
-		return getMaxElem(this);
-	}
 
-	private Integer getMaxElem(Tree t) {
-		Integer x = t.value;
-		if(t.right != null) {
-			x = getMaxElem(t.right);
+	//O(h) 
+	//Donde 'h' es la altura que recibe por parametro.
+	public ArrayList<Tree> getElemAtLevel(int level) {
+		return getElemAtLevel(level, this, 0);
+	}
+	
+	private ArrayList<Tree> getElemAtLevel(int level, Tree t, int levelAux) {
+		ArrayList<Tree> aux = new ArrayList<>();
+		int lAux = levelAux;
+		
+		if (lAux == level) {
+			aux.add(t);
 		}
-		return x;
+		else { 
+			if(t.left != null) {
+				aux.addAll(getElemAtLevel(level, t.left,(lAux+1)));
+			}
+			if(t.right != null) {
+				aux.addAll(getElemAtLevel(level, t.right,(lAux+1)));
+			}
+		}
+		return aux;
+	}
+	
+	//O(n)
+	//Ya que invoca al metodo getFrontier que recorre todo el arbol
+	//hasta llegar a las hojas.
+	public ArrayList<Integer> getDifferenceBetweenLeaves() {
+		ArrayList<Tree>leaves = getFrontier();
+		return getDifferenceBetweenLeaves(leaves, leaves.size()-1);
+	}
+	
+	private ArrayList<Integer> getDifferenceBetweenLeaves(ArrayList<Tree> leaves, int i) {
+		ArrayList<Integer> aux = new ArrayList<>();
+		
+		if(i > 0) {
+			aux.add( (leaves.get(i).value) - (leaves.get(i-1).value) );
+			aux.addAll(getDifferenceBetweenLeaves(leaves, i-1));
+		}
+		
+		return aux;
 	}
 }

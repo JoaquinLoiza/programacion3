@@ -3,36 +3,80 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		Tree arbol = new Tree(16);
-		arbol.add(14);
-		arbol.add(6);
-		arbol.add(15);
-		arbol.add(17);
-		arbol.add(9);
-		arbol.add(5);
-		arbol.add(8);
-		arbol.add(2);
-		arbol.add(19);
-			
-		//System.out.println(arbol.hasElement(6)+"\n");
+		int[] array = {16, 14, 6, 15, 17, 9, 5, 8, 2, 19};
+		Tree arbol = new Tree(array);
 		
-		//System.out.println("Delete: "+arbol.delete(6)+"\n");
+		System.out.print("Impresión preorder: ");
+		arbol.printPreOrder();
+		System.out.println("\nElemento de mayor valor: "+arbol.getMaxElem() );
+		System.out.println("Altura del arbol: " + arbol.getHeight() );
 		
-		//Imprime la altura del arbol
-		System.out.println("La altura es: "+arbol.getHeight()+"\n");
-		
-		//Trae un ArrayList con los nodos del brazo mas largo
-		/*
-		for(Tree t: arbol.getLongestBranch()) {
-			System.out.println(t.getValue());
+		System.out.print("Rama mas larga del arbol: ");
+		for(Tree t: arbol.getLongestBranch()) {			
+			System.out.print(t.getValue()+" ");
 		}
-		*/
 		
-		System.out.println("");
+		int level = 2;
+		System.out.print("\nElementos del nivel '"+level+"': ");
+		for(Tree t: arbol.getElemAtLevel(level)) {		
+			System.out.print(t.getValue()+" ");
+		}
 		
-		//Trae un ArrayList con los nodos hojas/frontera
-		for(Tree t: arbol.getFrontier()) {
-			System.out.println(t.getValue());
+		System.out.print("\nElementos frontera: ");
+		for(Tree t: arbol.getFrontier()) {		
+			System.out.print(t.getValue()+" ");
+		}
+		
+		arbol.add(23);
+		arbol.add(4);
+		arbol.delete(6);
+		arbol.delete(9);
+		
+		System.out.print("\n\nImpresión preorder: ");
+		arbol.printPreOrder();
+		System.out.println("\nElemento de mayor valor: "+arbol.getMaxElem() );
+		System.out.println("Altura del arbol: " + arbol.getHeight() );
+		
+		System.out.print("Rama mas larga del arbol: ");
+		for(Tree t: arbol.getLongestBranch()) {			
+			System.out.print(t.getValue()+" ");
+		}
+		
+		int level2 = 2;
+		System.out.print("\nElementos del nivel '"+level2+"': ");
+		for(Tree t: arbol.getElemAtLevel(level2)) {		
+			System.out.print(t.getValue()+" ");
+		}
+		
+		System.out.print("\nElementos frontera: ");
+		for(Tree t: arbol.getFrontier()) {		
+			System.out.print(t.getValue()+" ");
+		}
+		
+		arbol.add(34);
+		arbol.add(13);
+		arbol.delete(17);
+		arbol.delete(8);
+		
+		System.out.print("\n\nImpresión preorder: ");
+		arbol.printPreOrder();
+		System.out.println("\nElemento de mayor valor: "+arbol.getMaxElem() );
+		System.out.println("Altura del arbol: " + arbol.getHeight() );
+		
+		System.out.print("Rama mas larga del arbol: ");
+		for(Tree t: arbol.getLongestBranch()) {			
+			System.out.print(t.getValue()+" ");
+		}
+		
+		int level3 = 2;
+		System.out.print("\nElementos del nivel '"+level3+"': ");
+		for(Tree t: arbol.getElemAtLevel(level3)) {		
+			System.out.print(t.getValue()+" ");
+		}
+		
+		System.out.print("\nElementos frontera: ");
+		for(Tree t: arbol.getFrontier()) {		
+			System.out.print(t.getValue()+" ");
 		}
 		
 	}
