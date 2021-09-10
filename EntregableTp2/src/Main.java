@@ -5,7 +5,7 @@ public class Main {
 		
 		int[] array = {16, 14, 6, 15, 17, 9, 5, 8, 2, 19};
 		Tree arbol = new Tree(array);
-		
+				
 		System.out.print("Impresión preorder: ");
 		arbol.printPreOrder();
 		System.out.println("\nElemento de mayor valor: "+arbol.getMaxElem() );
@@ -25,6 +25,11 @@ public class Main {
 		System.out.print("\nElementos frontera: ");
 		for(Tree t: arbol.getFrontier()) {		
 			System.out.print(t.getValue()+" ");
+		}
+		
+		System.out.print("\nvalor de la diferencia entre hojas contiguas del árbol: ");
+		for(Integer e: arbol.getDifferenceBetweenLeaves()) {			
+			System.out.print(e+" ");
 		}
 		
 		arbol.add(23);
@@ -53,6 +58,11 @@ public class Main {
 			System.out.print(t.getValue()+" ");
 		}
 		
+		System.out.print("\nvalor de la diferencia entre hojas contiguas del árbol: ");
+		for(Integer e: arbol.getDifferenceBetweenLeaves()) {			
+			System.out.print(e+" ");
+		}
+		
 		arbol.add(34);
 		arbol.add(13);
 		arbol.delete(17);
@@ -77,6 +87,11 @@ public class Main {
 		System.out.print("\nElementos frontera: ");
 		for(Tree t: arbol.getFrontier()) {		
 			System.out.print(t.getValue()+" ");
+		}
+		
+		System.out.print("\nvalor de la diferencia entre hojas contiguas del árbol: ");
+		for(Integer e: arbol.getDifferenceBetweenLeaves()) {			
+			System.out.print(e+" ");
 		}
 		
 	}
