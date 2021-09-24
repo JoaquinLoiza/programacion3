@@ -48,14 +48,7 @@ public class Tree {
 			}
 		}
 	}
-	
-	// O(1);
-	// Donde se realiza un solo acceso a memoria.
-	public Integer getValue() {
-		int v = this.value;
-		return v;
-	}
-	
+		
 	// O(1)
 	// Donde se compara el valor con un solo acceso a memoria.
 	public boolean isEmpty() {
@@ -68,39 +61,43 @@ public class Tree {
 		if (this.value != null) {			
 			return this.value;
 		}else 
-			return -1;
+			return null;
 	}
 	
 	// O(h)
 	// Depende de la altura del arbol, ya que no tenemos certeza de que
 	// el arbol se encuntre bien balanzeado.
 	public boolean hasElement(Integer e) {
-		return hasElement(e, this);
-	}
-	
-	private boolean hasElement(Integer e, Tree t) {
-		if (getNode(e,t) != null) {
+		if(this.value == e) {
 			return true;
-		} else
-			return false;
+		} else if (this.value < e) {
+			if(this.right != null) {
+				return this.right.hasElement(e);
+			}
+		} else {
+			if (this.left != null) {
+				return this.left.hasElement(e);
+			}
+		}
+		return false;
 	}
 	
 	// O(h)
 	// Depende de la altura del arbol, ya que no tenemos certeza de que
 	// el arbol se encuntre bien balanzeado.
-	private Tree getNode(Integer e, Tree t) {
-		
+	private Tree getNode(Integer e) {	
 		Tree aux = null;
-		
-		if (t.value != null) {
-			if(t.value == e) {
-				aux = t;
-			} 
-			else if (e < t.value && t.left != null) {
-				aux = getNode(e, t.left); 
-			} 
-			else if (e > t.value && t.right != null){
-				aux = getNode(e, t.right);
+		if(this.value != null) {			
+			if(this.value == e) {
+				aux = this;
+			} else if (this.value < e) {
+				if(this.right != null) {
+					return this.right.getNode(e);
+				}
+			} else {
+				if (this.left != null) {
+					return this.left.getNode(e);
+				}
 			}
 		}
 		return aux;
@@ -113,19 +110,16 @@ public class Tree {
 	// delete (los 3 casos) y el metodo que busca el nodo mas a la
 	// izquierda del brazo derecho.
 	public boolean delete(Integer i) {
-		return delete(i, this);
-	}
-	
-	private boolean delete(Integer i, Tree t) {
 		boolean aux = false;
-		Tree tree = getNode(i, t);
-				
-		if (tree != null) {
-			if(tree.left == null && tree.right == null) {
-				if(tree.father.value > tree.value) {
-					tree.father.left = null;
-				} else {
-					tree.father.right = null;
+		Tree tree = getNode(i);
+		
+		if (tree != null && this.value != null) {
+			if(tree.left == null && tree.right == null) {		
+				if (tree.father != null) {					
+					if(tree.father.value > tree.value) 
+						tree.father.left = null;
+					else 
+						tree.father.right = null;			
 				}
 				tree.value = null;
 			}
@@ -144,6 +138,19 @@ public class Tree {
 		return aux;
 	}
 	
+	private void deleteWithChilds(Tree t) {
+		Integer aux = FindLeftmostRightNode(t.right).value;
+		delete(aux);
+		t.value = aux;
+	}
+
+	private Tree FindLeftmostRightNode(Tree t) {
+		if(t.left != null) {
+			return FindLeftmostRightNode(t.left);
+		} else
+			return t;
+	}
+	
 	private void deleteWithLeftChild(Tree t) {
 		if(t.father != null) {
 			if (t.value > t.father.value) {
@@ -151,7 +158,17 @@ public class Tree {
 			} else
 				t.father.left = t.left;
 		} else {
-			t = t.left;
+			if(t.left.right != null) {			
+				int nmi = t.FindLeftmostRightNode(t.left.right).value;
+				t.value = nmi;
+				t.left.delete(nmi);
+			} else if (t.left.left != null) {
+				t.value = t.left.value;
+				t.left.delete(t.value);
+			} else if(t.left.left == null && t.left.right == null) {
+				t.value = t.left.value;
+				t.left = null;
+			}
 		}
 	}
 	
@@ -162,96 +179,82 @@ public class Tree {
 			} else
 				t.father.left = t.right;
 		} else {
-			t = t.right;
+			if(t.right.left != null) {			
+				int nmi = t.FindLeftmostRightNode(t.right.left).value;
+				t.value = nmi;
+				t.right.delete(nmi);
+			} else if (t.right.right != null) {
+				t.value = t.right.value;
+				t.right.delete(t.value);
+			} else if(t.right.left == null && t.right.right == null) {
+				t.value = t.right.value;
+				t.right = null;
+			}
 		}
-	}
-	
-	private void deleteWithChilds(Tree t) {
-		Tree aux = FindLeftmostRightNode(t.right);
-		t.value = aux.value;
-		delete(aux.value ,aux);
-	}
-	
-	// O(h) porque no estamos seguros de que nuestro arbol este balanceado.
-	private Tree FindLeftmostRightNode(Tree t) {
-		if(t.left != null) {
-			return FindLeftmostRightNode(t.left);
-		} else
-			return t;
 	}
 	
 	//O(n)
 	// Para todos los metodos de impresion (pre order, post order y order) 
 	// ya que en todos los casos debemos recorrer todos los nodos del arbol.
 	public void printPreOrder() {
-		printPreOrder(this);
-	}
-	
-	private void printPreOrder(Tree t) {
-		if(t == null) {
-			return;
-		}	
-		System.out.print(t.value+" ");
-		
-		if(t.left != null)			
-			printPreOrder(t.left);
-		else
-			System.out.print("- ");
-		
-		if(t.right != null)			
-			printPreOrder(t.right);
-		else
-			System.out.print("- ");
+		if(this.value != null) {
+			System.out.print(this.value+" ");
+			if(this.left != null)			
+				this.left.printPreOrder();
+			else
+				System.out.print("- ");
+			
+			if(this.right != null)			
+				this.right.printPreOrder();
+			else
+				System.out.print("- ");
+		}
 	}
 	
 	public void printPostOrder() {
-		printPostOrder(this);
-	}
-	
-	private void printPostOrder(Tree t) {
-		if(t == null) {
-			return;
+		if(this.value != null) {			
+			if(this.left != null) {			
+				this.left.printPostOrder();
+			}
+			if(this.right != null) {			
+				this.right.printPostOrder();
+			}
+			System.out.println(this.value);
 		}
-		
-		printPostOrder(t.left);
-		printPostOrder(t.right);
-		System.out.println(t.value);
 	}
 	
 	public void printOrder() {
-		printOrder(this);
+		if(this.value != null) {
+			if(this.left != null) {			
+				this.left.printOrder();
+			}
+			System.out.println(this.value);
+			if(this.right != null) {			
+				this.right.printOrder();
+			}
+		}
 	}
 	
-	private void printOrder(Tree t) {
-		if(t == null) {
-			return;
-		}
-		
-		printOrder(t.left);
-		System.out.println(t.value);
-		printOrder(t.right);
-	}
-
 	//O(h)
 	// Depende de la altura del arbol, ya que no tenemos certeza de que
 	// el arbol se encuntre bien balanzeado.
 	public int getHeight() {
-		return getHeight(this);
-	}
-
-	private int getHeight(Tree t) {
 		int l = 0;
 		int r = 0;
 		
-		if(t.left != null) {
-			l = t.left.getHeight(t.left) + 1;
+		if(this.value != null) {			
+			if(this.left != null) {
+				l = this.left.getHeight() + 1;
+			}
+			
+			if(this.right != null) {
+				r = this.right.getHeight() + 1;
+			}
 		}
 		
-		if(t.right != null) {
-			r = t.right.getHeight(t.right) + 1;
-		}
-		
-		if (l > r )
+		if (this.value == null)
+			return -1;
+		else if(l > r) 
 			return l;
 		else
 			return r;
@@ -260,109 +263,114 @@ public class Tree {
 	//O(h)
 	// Depende de la altura del arbol, ya que no tenemos certeza de que
 	// el arbol se encuntre bien balanzeado.	
-	public ArrayList<Tree> getLongestBranch() {
-		return getLongestBranch(this);
-	}
-	
-	private ArrayList<Tree> getLongestBranch(Tree t) {
-		ArrayList<Tree> branchL = new ArrayList<>();
-		ArrayList<Tree> branchR = new ArrayList<>();
-		branchL.add(t);
-		branchR.add(t);
+	public ArrayList<Integer> getLongestBranch() {
+		ArrayList<Integer> branchL = new ArrayList<>();
+		ArrayList<Integer> branchR = new ArrayList<>();
 		
-		if(t.left != null) {
-			branchL.addAll(t.left.getLongestBranch(t.left));
+		if(this.value != null) {
+			branchL.add(this.value);
+			branchR.add(this.value);
+			
+			if(this.left != null) {
+				branchL.addAll(this.left.getLongestBranch());
+			}
+			
+			if(this.right != null) {
+				branchR.addAll(this.right.getLongestBranch());
+			}			
 		}
-		
-		if(t.right != null) {
-			branchR.addAll(t.right.getLongestBranch(t.right));
-		}	
 		
 		if (branchL.size() >= branchR.size()) {			
 			return branchL;
 		} else
 			return branchR;
+
 	}
 	
 	//O(h)
 	// Depende de la altura del arbol, ya que no tenemos certeza de que
 	// el arbol se encuntre bien balanzeado.
 	public Integer getMaxElem() {
-		return getMaxElem(this);
-	}
-
-	private Integer getMaxElem(Tree t) {
-		Integer aux = t.value;
-		if(t.right != null) {
-			aux = getMaxElem(t.right);
+		Integer aux = this.value;
+		if(this.right != null) {
+			aux = this.right.getMaxElem();
 		} 
 		return aux;
 	}
 	
 	//O(n)
 	//Ya que recorrera todos los nodos hasta llegar a cada una de las hojas.
-	public ArrayList<Tree> getFrontier(){
-		  return getFrontier(this);
-	}
-	
-	private ArrayList<Tree> getFrontier(Tree t) {
-		ArrayList<Tree> aux = new ArrayList<>();
-		if(t != null) {
-			if (t.left==null && t.right == null) {
-				aux.add(t);
+	public ArrayList<Integer> getFrontier() {
+		ArrayList<Integer> aux = new ArrayList<>();
+		if(this.value != null) {
+			if (this.left==null && this.right==null) {
+				aux.add(this.value);
 			}
 			else {
-				if(t.left != null) {
-					aux.addAll(getFrontier(t.left));
+				if(this.left != null) {
+					aux.addAll(this.left.getFrontier());
 				}
-				if (t.right != null) {
-					aux.addAll(getFrontier(t.right));
+				if (this.right != null) {
+					aux.addAll(this.right.getFrontier());
 				}
-			}
-		}
-		return aux;
-	}
-
-	//O(h) 
-	//Donde 'h' es la altura que recibe por parametro.
-	public ArrayList<Tree> getElemAtLevel(int level) {
-		return getElemAtLevel(level, this, 0);
-	}
-	
-	private ArrayList<Tree> getElemAtLevel(int level, Tree t, int levelAux) {
-		ArrayList<Tree> aux = new ArrayList<>();
-		int lAux = levelAux;
-		
-		if (lAux == level) {
-			aux.add(t);
-		}
-		else { 
-			if(t.left != null) {
-				aux.addAll(getElemAtLevel(level, t.left,(lAux+1)));
-			}
-			if(t.right != null) {
-				aux.addAll(getElemAtLevel(level, t.right,(lAux+1)));
 			}
 		}
 		return aux;
 	}
 	
 	//O(n)
-	//Ya que invoca al metodo getFrontier que recorre todo el arbol
-	//hasta llegar a las hojas.
-	public ArrayList<Integer> getDifferenceBetweenLeaves() {
-		ArrayList<Tree>leaves = getFrontier();
-		return getDifferenceBetweenLeaves(leaves, leaves.size()-1);
+	//Por que en el peor de los casos tendrá que recorrer todo el arbol.
+	public ArrayList<Integer> getElemAtLevel(int level) {
+		return getElemAtLevel(level, 0);
 	}
 	
-	private ArrayList<Integer> getDifferenceBetweenLeaves(ArrayList<Tree> leaves, int i) {
+	private ArrayList<Integer> getElemAtLevel(int level, int levelAux) {
 		ArrayList<Integer> aux = new ArrayList<>();
-		
-		if(i > 0) {
-			aux.add( (leaves.get(i).value) - (leaves.get(i-1).value) );
-			aux.addAll(getDifferenceBetweenLeaves(leaves, i-1));
+		if (this.value != null) {
+			if (levelAux == level) {
+				aux.add(this.value);
+			}
+			else { 
+				if(this.left != null) {
+					aux.addAll(this.left.getElemAtLevel(level, (levelAux+1)));
+				}
+				if(this.right != null) {
+					aux.addAll(this.right.getElemAtLevel(level, (levelAux+1)));
+				}
+			}
 		}
-		
 		return aux;
+	} 
+	
+	//O(n)
+	//Ya que recorrera todos los nodos hasta llegar a cada una de las hojas para realizar la resta.
+	public ArrayList<Integer> getDifferenceBetweenLeaves() {
+		return getDifferenceBetweenLeaves(new ArrayList<Integer>());
+	}
+	
+	private ArrayList<Integer> getDifferenceBetweenLeaves(ArrayList<Integer> temp) {
+		ArrayList<Integer> diff = new ArrayList<>();
+		
+		if (this.value != null) {
+			if (this.left==null && this.right==null) {
+				if(temp.isEmpty()) {
+					temp.add(this.value);
+				} else {
+					diff.add(temp.get(0) - this.value);
+					temp.remove(0);
+					temp.add(this.value);
+				}
+			}
+			else {
+				if (this.right != null) {
+					diff.addAll(this.right.getDifferenceBetweenLeaves(temp));
+				}
+				if(this.left != null) {
+					diff.addAll(this.left.getDifferenceBetweenLeaves(temp));
+				}
+			}
+		}	
+		return diff;
 	}
 }
+	
