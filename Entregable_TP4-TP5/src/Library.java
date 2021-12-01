@@ -13,61 +13,67 @@ public class Library {
 		this.passingScore = passingScore;
 	}
 	
-	public Solution asignar() {
+	public void addBooks(ArrayList<Book> books) {
+		this.books.addAll(books);
+	}
+	
+	public void addStudents(ArrayList<Student> students) {
+		this.students.addAll(students);
+	}
+	
+	private void sortBooks(ArrayList<Book> books) {
+		Collections.sort(books);
+	}
+	
+	private void sortStudents(ArrayList<Student> students) {
+		Collections.sort(students);
+	}
+	
+	public Solution assignBooks() {
 
-    Solution s = new Solution();
+		Solution solution = new Solution();
+		sortBooks(this.books);
+		sortStudents(this.students);
+		int index = 0;
 		
-		ordenarLibros(books);
-		ordenarAlumnos(students);
-
-		int indice = 0;
-		while(!students.isEmpty() && !books.isEmpty()) {
-			Student a = students.get(0);
-			while(a.getScore() < this.passingScore && !books.isEmpty() &&books.size()>indice) {
-				Book l = books.get(indice);
-				if(!a.containBook(l)) {
-					a.addBook(l);
-					a.setScore(l.getScore());
+		while(!this.students.isEmpty() && !this.books.isEmpty()) {
+			
+			Student student = this.students.get(0);
+			
+			while(student.getScore() < this.passingScore && !this.books.isEmpty() &&this.books.size()>index) {
+				
+				Book l = this.books.get(index);
+				
+				if(!student.containBook(l)) {
+					student.addBook(l);
+					student.setScore(l.getScore());
 					if(l.getCopies() > 1) {
 						l.setCopies();
-						indice++;
+						index++;
 					}
 					else {
-						books.remove(indice);
+						this.books.remove(index);
 					}
 					
 				}
 				else {
-					indice++;
+					index++;
 				}	
 			}
-			s.add(a);
-			if(a.getScore()>=this.passingScore) {
-				s.setCant();
-				indice=0;
+			
+			solution.add(student);
+			
+			if(student.getScore()>=this.passingScore) {
+				solution.setQuantity();
+				index=0;
 			}
 			else {
-				s.remover(a);
+				solution.remove(student);
 			}
-			students.remove(a);
+			
+			this.students.remove(student);
 		}
 		
-		return s;
-	}
-	
-	private void ordenarLibros(ArrayList<Book> libros) {
-		Collections.sort(libros);
-	}
-	
-	private void ordenarAlumnos(ArrayList<Student> alumnos) {
-		Collections.sort(alumnos);
-	}
-	
-	public void addLibro(ArrayList<Book> librosN) {
-		books.addAll(librosN);
-	}
-	
-	public void addAlumnos(ArrayList<Student> alumnosN) {
-		students.addAll(alumnosN);
+		return solution;
 	}
 }

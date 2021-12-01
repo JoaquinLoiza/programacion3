@@ -1,36 +1,37 @@
 import java.util.ArrayList;
 
 public class Solution {
-	private ArrayList<Student> solucion;
-	private int cant;
+	
+	private ArrayList<Student> studentsSolution;
+	private int quantity;
 
 	public Solution() {
-		this.solucion = new ArrayList<>();
-		this.cant=0;
+		this.studentsSolution = new ArrayList<>();
+		this.quantity = 0;
 	}
 	
-	public int getCant() {
-		return cant;
+	public int getQuantity() {
+		return this.quantity;
 	}
 	
-	public void setCant() {
-		this.cant+=1;
+	public void setQuantity() {
+		this.quantity+= 1;
 	}
 	
-	public void add(Student a) {//agrego el alumno con un arreglo vacio de libros
-		this.solucion.add(a) ;
+	public void add(Student s) {
+		this.studentsSolution.add(s) ;
 	}
 	
-	public void remover(Student a) {
-		this.solucion.remove(a);
+	public void remove(Student s) {
+		this.studentsSolution.remove(s);
 	}
 	
-	public ArrayList<Student> alumnos(){
-		return new ArrayList<>(this.solucion);
+	public ArrayList<Student> getStudentsSolution(){
+		return new ArrayList<>(this.studentsSolution);
 	}
 
 	@Override
 	public String toString() {
-		return "La cantidad de alumnos aprobados es "+ this.getCant() +" y los que aprobaron  son "+ this.solucion.toString();
+		return "La cantidad de alumnos aprobados es "+ this.getQuantity() +" y los que aprobaron son "+ this.studentsSolution.toString();
 	}
 }
