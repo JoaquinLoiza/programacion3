@@ -50,10 +50,10 @@ public class Student implements Comparable<Student>{
 	
 	@Override
 	public int compareTo(Student s) {
-		if (this.score> s.score) {
+		if (this.score > s.score) {
 			return -1;
 		}
-		if(this.score<s.score) {
+		if(this.score < s.score) {
 			return 1;
 		}
 		else {

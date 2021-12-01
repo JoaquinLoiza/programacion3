@@ -10,7 +10,6 @@ public class Book implements Comparable<Book>{
 	private int copies;
 	
 	public Book(String idBook, String title, String author, String genre, int pages, int score, int copies) {
-		
 		this.id = idBook;
 		this.title = title;
 		this.author = author;
@@ -82,11 +81,11 @@ public class Book implements Comparable<Book>{
 	}
 	
 	@Override
-	public int compareTo(Book l1) {
-		if(this.score<l1.score) {
+	public int compareTo(Book l) {
+		if(this.score < l.score) {
 			return -1;
 		}
-		if(this.score>l1.score) {
+		if(this.score > l.score) {
 			return 1;
 		}
 		else {

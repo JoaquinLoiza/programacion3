@@ -1,8 +1,7 @@
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class Main {
+public class MainGreedy {
 
 	public static void main(String[] args) {
 		
@@ -12,21 +11,14 @@ public class Main {
 		CSVReaderBooks readerBooks = new CSVReaderBooks("./data/dataset1.csv");
 		books = readerBooks.read();
 
-		//Collections.sort(books);
-
-		System.out.println(books);
-		
 		CSVReaderStudents readerStudents = new CSVReaderStudents("./data/students.csv");
 		students = readerStudents.read();
 
-		Collections.sort(students);
-		
-		//System.out.println(students);
-
-		Library library = new Library(120);
+		Library library = new Library(55);
 		library.addStudents(students);
 		library.addBooks(books);
-		System.out.println(library.assignBooks());
 		
+		System.out.println(library.assignBooks());
+
 	}
 }

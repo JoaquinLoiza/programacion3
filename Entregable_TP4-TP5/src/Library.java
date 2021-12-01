@@ -36,11 +36,11 @@ public class Library {
 		sortStudents(this.students);
 		int index = 0;
 		
-		while(!this.students.isEmpty() && !this.books.isEmpty()) {
+		while(!this.books.isEmpty() && !this.students.isEmpty()) {
 			
 			Student student = this.students.get(0);
 			
-			while(student.getScore() < this.passingScore && !this.books.isEmpty() &&this.books.size()>index) {
+			while(!this.books.isEmpty() && this.books.size() > index && student.getScore() < this.passingScore) {
 				
 				Book l = this.books.get(index);
 				
@@ -55,8 +55,7 @@ public class Library {
 						this.books.remove(index);
 					}
 					
-				}
-				else {
+				} else {
 					index++;
 				}	
 			}
@@ -64,7 +63,6 @@ public class Library {
 			solution.add(student);
 			
 			if(student.getScore()>=this.passingScore) {
-				solution.setQuantity();
 				index=0;
 			}
 			else {
