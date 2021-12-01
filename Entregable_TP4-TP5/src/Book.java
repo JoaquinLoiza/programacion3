@@ -9,8 +9,7 @@ public class Book implements Comparable<Book>{
 	private int score;
 	private int copies;
 	
-	public Book(String idBook, String title, String author,
-			String genre, int pages, int score, int copies) {
+	public Book(String idBook, String title, String author, String genre, int pages, int score, int copies) {
 		
 		this.id = idBook;
 		this.title = title;
@@ -79,7 +78,7 @@ public class Book implements Comparable<Book>{
 	
 	@Override
 	public String toString() {
-		return "Titulo: "+this.title;
+		return "Title: "+this.title;
 	}
 	
 	@Override
