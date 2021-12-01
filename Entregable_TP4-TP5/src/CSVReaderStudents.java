@@ -1,4 +1,3 @@
-package CSVReaders;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,28 +6,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class CSVReaderStudents {
-private String path;
+	
+	private String path;
 	
 	public CSVReaderStudents(String path) {
 		this.path = path;
 	}
 	
-	public void read() {
+	public ArrayList<Student> read() {
 		
-		// Obtengo una lista con las lineas del archivo
-		// lines.get(0) tiene la primer linea del archivo
-		// lines.get(1) tiene la segunda linea del archivo... y así
+		ArrayList<Student>students = new ArrayList<Student>();		
 		ArrayList<String[]> lines = this.readContent();
 		
 		for (String[] line: lines) {
-			// Cada linea es un arreglo de Strings, donde cada posicion guarda un elemento
-			String idAlumno = line[0].trim();
-			Integer puntaje = Integer.parseInt(line[1].trim());
-			
-			System.out.println(idAlumno);
-			System.out.println(puntaje);
+			String idStudent = line[0].trim();
+			Integer score = Integer.parseInt(line[1].trim());
+			Student student = new Student(idStudent,score);
+			students.add(student);
 		}
-		
+		return students;
 	}
 
 	private ArrayList<String[]> readContent() {
@@ -40,7 +36,7 @@ private String path;
 		try {
 			fileReader = new FileReader(file);
 			bufferedReader = new BufferedReader(fileReader);
-			String line = bufferedReader.readLine(); // Salteo la primera linea
+			String line = bufferedReader.readLine();
 			while ((line = bufferedReader.readLine()) != null) {
 				line = line.trim();
 				lines.add(line.split(";"));
@@ -54,7 +50,6 @@ private String path;
 					e1.printStackTrace();
 				}
 		}
-		
 		return lines;
 	}
 }
