@@ -19,6 +19,5 @@ public class MainGreedy {
 		library.addBooks(books);
 		
 		System.out.println(library.assignBooks());
-
 	}
 }

@@ -34,44 +34,45 @@ public class Library {
 		Solution solution = new Solution();
 		sortBooks(this.books);
 		sortStudents(this.students);
-		int index = 0;
 		
 		while(!this.books.isEmpty() && !this.students.isEmpty()) {
 			
 			Student student = this.students.get(0);
+			this.students.remove(student);
+			int index = 0;
 			
-			while(!this.books.isEmpty() && this.books.size() > index && student.getScore() < this.passingScore) {
+			while(!this.books.isEmpty() && !isFeasible(student) && index < this.books.size()) {
 				
-				Book l = this.books.get(index);
+				Book book = this.books.get(index);
 				
-				if(!student.containBook(l)) {
-					student.addBook(l);
-					student.setScore(l.getScore());
-					if(l.getCopies() > 1) {
-						l.setCopies();
+				if(student.containBook(book)) {
+					index++;
+				} 
+				else {		
+					student.addBook(book);
+					student.setScore(book.getScore());
+					
+					if(book.getCopies() > 1) {
+						book.subtractCopy();
 						index++;
 					}
 					else {
 						this.books.remove(index);
 					}
-					
-				} else {
-					index++;
-				}	
+				}
 			}
 			
-			solution.add(student);
-			
-			if(student.getScore()>=this.passingScore) {
-				index=0;
-			}
-			else {
-				solution.remove(student);
-			}
-			
-			this.students.remove(student);
+			if(isFeasible(student)) 
+				solution.add(student);
 		}
-		
 		return solution;
+	}
+	
+	public boolean isFeasible(Student s) {
+		Boolean result = false;
+		if(s.getScore() >= this.passingScore) {
+			result = true;
+		}
+		return result;
 	}
 }

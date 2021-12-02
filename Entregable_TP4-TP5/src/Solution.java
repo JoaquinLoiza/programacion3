@@ -12,10 +12,6 @@ public class Solution {
 		this.studentsSolution.add(s) ;
 	}
 	
-	public void remove(Student s) {
-		this.studentsSolution.remove(s);
-	}
-	
 	public ArrayList<Student> getStudentsSolution(){
 		return new ArrayList<>(this.studentsSolution);
 	}
