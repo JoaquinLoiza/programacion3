@@ -8,8 +8,12 @@ public class Solution {
 		this.studentsSolution = new ArrayList<>();
 	}
 	
-	public void add(Student s) {
+	public void addStudent(Student s) {
 		this.studentsSolution.add(s) ;
+	}
+	
+	public void addStudents(ArrayList<Student> students) {
+		this.studentsSolution.addAll(students) ;
 	}
 	
 	public ArrayList<Student> getStudentsSolution(){

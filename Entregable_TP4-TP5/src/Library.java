@@ -61,7 +61,7 @@ public class Library {
 					student.setScore(book.getScore());
 					
 					if(book.getCopies() > 1) {
-						book.subtractCopy();
+						book.setCopies(-1);
 						index++;
 					}
 					else {
@@ -71,13 +71,13 @@ public class Library {
 			}
 			
 			if(isFeasible(student)) 
-				solution.add(student);
+				solution.addStudent(student);
 		}
 		return solution;
 	}
 	
 	public Solution assignBooksBacktracking() {	
-		State state = new State(students);
+		State state = new State();
 		Solution currentSolution = null;
 		int indexBook = 0;
 		return this.assignBooksBacktracking(state , currentSolution, indexBook);
@@ -93,30 +93,78 @@ public class Library {
 		if(indexBook > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
 			if(currentSolution == null || currentSolution.getQuantityApproved() < state.getQuantityApproved()) {
 				currentSolution = new Solution();
-				//currentSolution.
-				//
-				//
+				ArrayList<Student> studentsState = state.getStudents();
+				for(Student s : studentsState) {
+					if(this.isFeasible(s)) {						
+						currentSolution.addStudent(s);
+					}
+				}
 			}
 		} 
 		else {
-			indexBook++;
 			
 			if(indexBook < this.books.size()) {
 				book = this.books.get(indexBook);
 			}
 			
+			indexBook++;
+			
 			while(indexStudent < this.students.size() && book != null) {
-				if(!this.students.get(indexStudent).containBook(book)) {
+				
+				Student student = this.students.get(indexStudent);
+				
+				if(!student.containBook(book)) {
+					
+					//------ HACER ------
 					assignedBook = true;
-					//asignar el libro al alumno en state
+					this.removeBook(book);
+					student.addBook(book);
+					student.setScore(book.getScore());
+					state.addStudent(student);
+					
+					if(this.isFeasible(student)) {
+						state.setQuantityApproved(1);
+					}
+
+					// LLAMADO RECURSIVO AL BACK
+					this.assignBooksBacktracking(state, currentSolution, indexBook);
+										
+					//------ DESHACER ------
+					this.addBook(book);
+					student.removeBook(book);
+					student.setScore(-book.getScore());
+					//state.removeStudent(student);
+					
+					if(this.isFeasible(student)) {
+						state.setQuantityApproved(-1);
+					}
 				}
+				indexStudent++;
 			}
 			
 			if(assignedBook == false) {
-				// ¿Que hago?
+				this.removeBook(book);
+				this.assignBooksBacktracking(state, currentSolution, indexBook);
+				this.addBook(book);
 			}
 		}
 		
-		return null;
-	}	
+		return currentSolution;
+	}
+	
+	private void removeBook(Book book) {
+		if(book.getCopies() > 1) {
+			book.setCopies(-1);
+		} else {
+			this.books.remove(book);
+		}
+	}
+	
+	private void addBook(Book book) {
+		if(!this.books.contains(book)) {
+			this.books.add(book);
+		} else {
+			book.setCopies(1);
+		}
+	}
 }

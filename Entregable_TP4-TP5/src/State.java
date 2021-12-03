@@ -6,9 +6,8 @@ public class State {
 	private int quantityApproved;
 	private int cost;
 	
-	public State(ArrayList<Student> students) {
+	public State() {
 		this.AllStudents = new ArrayList<>();
-		this.AllStudents.addAll(students);
 		this.quantityApproved = 0;
 		this.cost = 0;
 	}
@@ -27,5 +26,19 @@ public class State {
 	
 	public void setCost(int cost) {
 		this.cost += cost;
+	}
+	
+	public void addStudent(Student student) {
+		if(!this.AllStudents.contains(student)) {
+			this.AllStudents.add(student);
+		}
+	}
+	
+	public void removeStudent(Student student) {
+		this.AllStudents.remove(student);
+	}
+	
+	public ArrayList<Student> getStudents() {
+		return new ArrayList<Student>(this.AllStudents);
 	}
 }

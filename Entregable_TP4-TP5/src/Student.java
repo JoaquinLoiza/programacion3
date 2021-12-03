@@ -39,6 +39,10 @@ public class Student implements Comparable<Student>{
 	public ArrayList<Book> getBooks(){
 		return new ArrayList<>(this.books);	
 	}
+	
+	public void removeBook(Book book) {
+		this.books.remove(book);
+	}
 
 	@Override
 	public String toString() {

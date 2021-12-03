@@ -71,8 +71,8 @@ public class Book implements Comparable<Book>{
 		return this.copies;
 	}
 	
-	public void subtractCopy() {
-		this.copies = this.copies-1;
+	public void setCopies(int n)  {
+		this.copies += n;
 	}
 	
 	@Override
