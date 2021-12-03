@@ -18,6 +18,6 @@ public class MainGreedy {
 		library.addStudents(students);
 		library.addBooks(books);
 		
-		System.out.println(library.assignBooks());
+		System.out.println(library.assignBooksGreedy());
 	}
 }

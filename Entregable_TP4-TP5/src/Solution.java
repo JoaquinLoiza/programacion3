@@ -16,6 +16,10 @@ public class Solution {
 		return new ArrayList<>(this.studentsSolution);
 	}
 
+	public int getQuantityApproved() {
+		return this.studentsSolution.size();
+	}
+	
 	@Override
 	public String toString() {
 		

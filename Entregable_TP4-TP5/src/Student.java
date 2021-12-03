@@ -33,10 +33,7 @@ public class Student implements Comparable<Student>{
 	}
 	
 	public boolean containBook(Book l) {
-		if(!this.books.isEmpty()) {
-			 return this.books.get(this.books.size()-1).equals(l);
-		}
-		return false;
+		return this.books.contains(l);
 	}
 	
 	public ArrayList<Book> getBooks(){

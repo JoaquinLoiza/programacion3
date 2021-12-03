@@ -29,7 +29,15 @@ public class Library {
 		Collections.sort(students);
 	}
 	
-	public Solution assignBooks() {
+	public boolean isFeasible(Student s) {
+		Boolean result = false;
+		if(s.getScore() >= this.passingScore) {
+			result = true;
+		}
+		return result;
+	}
+	
+	public Solution assignBooksGreedy() {
 
 		Solution solution = new Solution();
 		sortBooks(this.books);
@@ -68,11 +76,47 @@ public class Library {
 		return solution;
 	}
 	
-	public boolean isFeasible(Student s) {
-		Boolean result = false;
-		if(s.getScore() >= this.passingScore) {
-			result = true;
-		}
-		return result;
+	public Solution assignBooksBacktracking() {	
+		State state = new State(students);
+		Solution currentSolution = null;
+		int indexBook = 0;
+		return this.assignBooksBacktracking(state , currentSolution, indexBook);
 	}
+	
+	private Solution assignBooksBacktracking(State state, Solution currentSolution, int indexBook) {
+	
+		Boolean assignedBook = false;
+		Book book = null;
+		int indexStudent = 0;
+		state.setCost(1);
+		
+		if(indexBook > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
+			if(currentSolution == null || currentSolution.getQuantityApproved() < state.getQuantityApproved()) {
+				currentSolution = new Solution();
+				//currentSolution.
+				//
+				//
+			}
+		} 
+		else {
+			indexBook++;
+			
+			if(indexBook < this.books.size()) {
+				book = this.books.get(indexBook);
+			}
+			
+			while(indexStudent < this.students.size() && book != null) {
+				if(!this.students.get(indexStudent).containBook(book)) {
+					assignedBook = true;
+					//asignar el libro al alumno en state
+				}
+			}
+			
+			if(assignedBook == false) {
+				// ¿Que hago?
+			}
+		}
+		
+		return null;
+	}	
 }
