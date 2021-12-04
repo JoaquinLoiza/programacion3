@@ -17,8 +17,6 @@ public class MainBacktracking {
 		library.addStudents(students);
 		library.addBooks(books);
 		
-		System.out.println(library.assignBooksBacktracking());
-		System.out.println("---------------------\nEl costo fue de: "+library.getCost());
+		System.out.print(library.assignBooksBacktracking());
 	}
-
 }

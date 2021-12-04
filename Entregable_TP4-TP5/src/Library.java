@@ -7,18 +7,12 @@ public class Library {
 	private ArrayList<Student> students;
 	private Solution solution;
 	private int passingScore;
-	private int cost;
 	
 	public Library(int passingScore) {
 		this.books = new ArrayList<>();
 		this.students = new ArrayList<>();
 		this.solution = new Solution();
 		this.passingScore = passingScore;
-		this.cost = 0;
-	}
-	
-	public int getCost() {
-		return this.cost;
 	}
 	
 	public void addBooks(ArrayList<Book> books) {
@@ -53,7 +47,7 @@ public class Library {
 		}
 	}
 	
-	public boolean isFeasible(Student s) {
+	public boolean approvedStudent(Student s) {
 		Boolean result = false;
 		if(s.getScore() >= this.passingScore) {
 			result = true;
@@ -72,10 +66,10 @@ public class Library {
 			this.students.remove(student);
 			int index = 0;
 			
-			while(!this.books.isEmpty() && !isFeasible(student) && index < this.books.size()) {
+			while(!this.books.isEmpty() && !approvedStudent(student) && index < this.books.size()) {
 				
 				Book book = this.books.get(index);
-				this.cost++;
+				this.solution.setCost(1);
 				
 				if(student.containBook(book)) {
 					index++;
@@ -92,7 +86,7 @@ public class Library {
 				}
 			}
 			
-			if(isFeasible(student)) 
+			if(approvedStudent(student)) 
 				this.solution.addStudent(student);
 		}
 		return this.solution;
@@ -105,7 +99,7 @@ public class Library {
 	
 	private Solution assignBooksBacktracking(State state) {
 		
-		this.cost++;
+		this.solution.setCost(1);
 		
 		if(state.getIndexBook() > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
 			if(this.solution.getQuantityApproved() == 0 || this.solution.getQuantityApproved() < state.getQuantityApproved()) {
@@ -120,20 +114,20 @@ public class Library {
 				book = this.books.get(state.getIndexBook());
 			}
 			
-			if(this.books.size() > 0 && book != null) {
+			if(book != null) {
 				boolean assignedBook = false;
 				int indexStudent = 0;
 				
 				while(indexStudent < this.students.size()) {
 					
 					Student student = this.students.get(indexStudent);
-					if(!student.containBook(book) && !this.isFeasible(student)) {
+					if(!student.containBook(book) && !this.approvedStudent(student)) {
 						//------ HACER ------
 						assignedBook = true;
 						student.addBook(book);
 						student.setScore(book.getScore());
 						this.removeBook(book);
-						if(this.isFeasible(student)) {
+						if(this.approvedStudent(student)) {
 							state.setQuantityApproved(1);
 						}
 						
@@ -141,7 +135,7 @@ public class Library {
 						this.assignBooksBacktracking(state);
 						
 						//------ DESHACER CAMBIOS ------
-						if(this.isFeasible(student)) {
+						if(this.approvedStudent(student)) {
 							state.setQuantityApproved(-1);
 						}
 						student.removeBook(book);
@@ -151,7 +145,7 @@ public class Library {
 					indexStudent++;
 				}
 				
-				if(assignedBook == false) {
+				if(!assignedBook) {
 					state.setIndexBook(1);
 					this.assignBooksBacktracking(state);
 					state.setIndexBook(-1);
