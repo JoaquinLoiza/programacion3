@@ -4,12 +4,21 @@ public class State {
 	
 	private ArrayList<Student> AllStudents;
 	private int quantityApproved;
-	private int cost;
+	private int indexBook;
 	
-	public State() {
+	public State(ArrayList<Student> students) {
 		this.AllStudents = new ArrayList<>();
+		this.AllStudents.addAll(students);
 		this.quantityApproved = 0;
-		this.cost = 0;
+		this.indexBook = 0;
+	}
+	
+	public int getIndexBook() {
+		return this.indexBook;
+	}
+	
+	public void setIndexBook(int n) {
+		this.indexBook += n;
 	}
 	
 	public int getQuantityApproved() {
@@ -18,14 +27,6 @@ public class State {
 	
 	public void setQuantityApproved(int quantity) {
 		this.quantityApproved += quantity;
-	}
-	
-	public int getCost() {
-		return this.cost;
-	}
-	
-	public void setCost(int cost) {
-		this.cost += cost;
 	}
 	
 	public void addStudent(Student student) {
@@ -40,5 +41,16 @@ public class State {
 	
 	public ArrayList<Student> getStudents() {
 		return new ArrayList<Student>(this.AllStudents);
+	}
+	
+	public ArrayList<Student> getStudentsApproved(int passingScore) {
+		ArrayList<Student> aux = new ArrayList<Student>();
+		
+		for(Student s : this.AllStudents) {
+			if(s.getScore() >= passingScore) {
+				aux.add(s.clone());
+			}
+		}
+		return aux;
 	}
 }

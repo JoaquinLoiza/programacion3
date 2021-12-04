@@ -77,7 +77,7 @@ public class Book implements Comparable<Book>{
 	
 	@Override
 	public String toString() {
-		return "Title: "+this.title;
+		return this.title;
 	}
 	
 	@Override

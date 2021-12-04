@@ -6,6 +6,12 @@ public class Student implements Comparable<Student>{
 	private int score;
 	private ArrayList<Book> books;
 	
+	public Student() {
+		this.id = null;
+		this.score = 0;
+		this.books = new ArrayList<>();
+	}
+	
 	public Student(String id, int score) {
 		this.id = id;
 		this.score = score;
@@ -32,6 +38,18 @@ public class Student implements Comparable<Student>{
 		this.books.add(l);
 	}
 	
+	public Student clone() {
+		Student s = new Student();
+		s.setId(this.id);
+		s.setScore(this.score);
+		s.addBooks(new ArrayList<Book>(this.books));
+		return s;
+	}
+	
+	public void addBooks(ArrayList<Book> books) {
+		this.books.addAll(books);
+	}
+	
 	public boolean containBook(Book l) {
 		return this.books.contains(l);
 	}
@@ -46,7 +64,11 @@ public class Student implements Comparable<Student>{
 
 	@Override
 	public String toString() {
-		return this.id+" : "+this.books;
+		String data = "---------------------\n"
+				+ "Id: "+this.id+"\n"
+				+ "Score: "+this.score+"\n"
+				+ "Books: "+this.books; 
+		return data;
 	}
 	
 	@Override

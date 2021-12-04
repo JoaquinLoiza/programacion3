@@ -14,10 +14,11 @@ public class MainGreedy {
 		CSVReaderStudents readerStudents = new CSVReaderStudents("./data/students.csv");
 		students = readerStudents.read();
 
-		Library library = new Library(55);
+		Library library = new Library(50);
 		library.addStudents(students);
 		library.addBooks(books);
 		
 		System.out.println(library.assignBooksGreedy());
+		System.out.println("El costo fue: "+library.getCost());
 	}
 }

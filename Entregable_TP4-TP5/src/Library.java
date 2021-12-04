@@ -5,12 +5,20 @@ public class Library {
 	
 	private ArrayList<Book> books;
 	private ArrayList<Student> students;
+	private Solution solution;
 	private int passingScore;
+	private int cost;
 	
 	public Library(int passingScore) {
 		this.books = new ArrayList<>();
 		this.students = new ArrayList<>();
+		this.solution = new Solution();
 		this.passingScore = passingScore;
+		this.cost = 0;
+	}
+	
+	public int getCost() {
+		return this.cost;
 	}
 	
 	public void addBooks(ArrayList<Book> books) {
@@ -39,7 +47,6 @@ public class Library {
 	
 	public Solution assignBooksGreedy() {
 
-		Solution solution = new Solution();
 		sortBooks(this.books);
 		sortStudents(this.students);
 		
@@ -52,6 +59,7 @@ public class Library {
 			while(!this.books.isEmpty() && !isFeasible(student) && index < this.books.size()) {
 				
 				Book book = this.books.get(index);
+				this.cost++;
 				
 				if(student.containBook(book)) {
 					index++;
@@ -71,85 +79,75 @@ public class Library {
 			}
 			
 			if(isFeasible(student)) 
-				solution.addStudent(student);
+				this.solution.addStudent(student);
 		}
-		return solution;
+		return this.solution;
 	}
 	
 	public Solution assignBooksBacktracking() {	
-		State state = new State();
-		Solution currentSolution = null;
-		int indexBook = 0;
-		return this.assignBooksBacktracking(state , currentSolution, indexBook);
+		State state = new State(this.students);
+		return this.assignBooksBacktracking(state);
 	}
 	
-	private Solution assignBooksBacktracking(State state, Solution currentSolution, int indexBook) {
-	
-		Boolean assignedBook = false;
-		Book book = null;
-		int indexStudent = 0;
-		state.setCost(1);
+	private Solution assignBooksBacktracking(State state) {
 		
-		if(indexBook > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
-			if(currentSolution == null || currentSolution.getQuantityApproved() < state.getQuantityApproved()) {
-				currentSolution = new Solution();
-				ArrayList<Student> studentsState = state.getStudents();
+		this.cost++;
+		
+		if(state.getIndexBook() > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
+			
+			if(this.solution.getQuantityApproved() == 0 || this.solution.getQuantityApproved() < state.getQuantityApproved()) {
+				this.solution = new Solution();
+				ArrayList<Student> studentsState = state.getStudentsApproved(this.passingScore);
 				for(Student s : studentsState) {
-					if(this.isFeasible(s)) {						
-						currentSolution.addStudent(s);
-					}
+					this.solution.addStudent(s);
 				}
-			}
-		} 
-		else {
-			
-			if(indexBook < this.books.size()) {
-				book = this.books.get(indexBook);
-			}
-			
-			indexBook++;
-			
-			while(indexStudent < this.students.size() && book != null) {
-				
-				Student student = this.students.get(indexStudent);
-				
-				if(!student.containBook(book)) {
-					
-					//------ HACER ------
-					assignedBook = true;
-					this.removeBook(book);
-					student.addBook(book);
-					student.setScore(book.getScore());
-					state.addStudent(student);
-					
-					if(this.isFeasible(student)) {
-						state.setQuantityApproved(1);
-					}
-
-					// LLAMADO RECURSIVO AL BACK
-					this.assignBooksBacktracking(state, currentSolution, indexBook);
-										
-					//------ DESHACER ------
-					this.addBook(book);
-					student.removeBook(book);
-					student.setScore(-book.getScore());
-					//state.removeStudent(student);
-					
-					if(this.isFeasible(student)) {
-						state.setQuantityApproved(-1);
-					}
-				}
-				indexStudent++;
-			}
-			
-			if(assignedBook == false) {
-				this.removeBook(book);
-				this.assignBooksBacktracking(state, currentSolution, indexBook);
-				this.addBook(book);
 			}
 		}
-		
-		return currentSolution;
+		else {
+			Book book = null;
+			if(state.getIndexBook() < this.books.size()) {
+				book = this.books.get(state.getIndexBook());
+			}
+			
+			if(this.books.size() > 0 && book != null) {
+				boolean assignedBook = false;
+				int indexStudent = 0;
+				
+				while(indexStudent < this.students.size()) {
+					
+					Student student = this.students.get(indexStudent);
+					if(!student.containBook(book) && !this.isFeasible(student)) {
+						assignedBook = true;
+						student.addBook(book);
+						student.setScore(book.getScore());
+						this.removeBook(book);
+						if(this.isFeasible(student)) {
+							state.setQuantityApproved(1);
+						}
+						
+						// LLAMADO RECURSIVO AL BACK
+						this.assignBooksBacktracking(state);
+						
+						//------ DESHACER CAMBIOS ------
+						if(this.isFeasible(student)) {
+							state.setQuantityApproved(-1);
+						}
+						student.removeBook(book);
+						student.setScore(-book.getScore());
+						this.addBook(book);
+					}
+					indexStudent++;
+				}
+				
+				if(assignedBook == false) {
+					state.setIndexBook(1);
+					this.assignBooksBacktracking(state);
+					state.setIndexBook(-1);
+				}
+				
+			}
+		}
+		return this.solution;
 	}
 	
 	private void removeBook(Book book) {
