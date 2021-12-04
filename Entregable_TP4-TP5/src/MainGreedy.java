@@ -19,6 +19,6 @@ public class MainGreedy {
 		library.addBooks(books);
 		
 		System.out.println(library.assignBooksGreedy());
-		System.out.println("El costo fue: "+library.getCost());
+		System.out.println("---------------------\nEl costo fue de: "+library.getCost());
 	}
 }

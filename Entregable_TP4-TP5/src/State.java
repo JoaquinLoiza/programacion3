@@ -29,23 +29,9 @@ public class State {
 		this.quantityApproved += quantity;
 	}
 	
-	public void addStudent(Student student) {
-		if(!this.AllStudents.contains(student)) {
-			this.AllStudents.add(student);
-		}
-	}
-	
-	public void removeStudent(Student student) {
-		this.AllStudents.remove(student);
-	}
-	
-	public ArrayList<Student> getStudents() {
-		return new ArrayList<Student>(this.AllStudents);
-	}
-	
 	public ArrayList<Student> getStudentsApproved(int passingScore) {
-		ArrayList<Student> aux = new ArrayList<Student>();
 		
+		ArrayList<Student> aux = new ArrayList<Student>();
 		for(Student s : this.AllStudents) {
 			if(s.getScore() >= passingScore) {
 				aux.add(s.clone());

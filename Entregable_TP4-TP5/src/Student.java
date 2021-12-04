@@ -67,7 +67,12 @@ public class Student implements Comparable<Student>{
 		String data = "---------------------\n"
 				+ "Id: "+this.id+"\n"
 				+ "Score: "+this.score+"\n"
-				+ "Books: "+this.books; 
+				+ "Books: ";
+		
+		for(Book b : this.books) {
+			data += "\n\t-"+b;
+		}
+		
 		return data;
 	}
 	

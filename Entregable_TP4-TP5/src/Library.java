@@ -37,6 +37,22 @@ public class Library {
 		Collections.sort(students);
 	}
 	
+	private void removeBook(Book book) {
+		if(book.getCopies() > 1) {
+			book.setCopies(-1);
+		} else {
+			this.books.remove(book);
+		}
+	}
+	
+	private void addBook(Book book) {
+		if(!this.books.contains(book)) {
+			this.books.add(book);
+		} else {
+			book.setCopies(1);
+		}
+	}
+	
 	public boolean isFeasible(Student s) {
 		Boolean result = false;
 		if(s.getScore() >= this.passingScore) {
@@ -67,13 +83,11 @@ public class Library {
 				else {		
 					student.addBook(book);
 					student.setScore(book.getScore());
-					
-					if(book.getCopies() > 1) {
-						book.setCopies(-1);
+					this.removeBook(book);
+					//Si lo contiene significa que al remover tenia una
+					//copia y se decremento el numero de las mismas
+					if(this.books.contains(book)) {
 						index++;
-					}
-					else {
-						this.books.remove(index);
 					}
 				}
 			}
@@ -94,13 +108,10 @@ public class Library {
 		this.cost++;
 		
 		if(state.getIndexBook() > this.books.size()-1 || state.getQuantityApproved() == students.size()) {
-			
 			if(this.solution.getQuantityApproved() == 0 || this.solution.getQuantityApproved() < state.getQuantityApproved()) {
 				this.solution = new Solution();
 				ArrayList<Student> studentsState = state.getStudentsApproved(this.passingScore);
-				for(Student s : studentsState) {
-					this.solution.addStudent(s);
-				}
+				this.solution.addStudents(studentsState);
 			}
 		}
 		else {
@@ -117,6 +128,7 @@ public class Library {
 					
 					Student student = this.students.get(indexStudent);
 					if(!student.containBook(book) && !this.isFeasible(student)) {
+						//------ HACER ------
 						assignedBook = true;
 						student.addBook(book);
 						student.setScore(book.getScore());
@@ -148,21 +160,5 @@ public class Library {
 			}
 		}
 		return this.solution;
-	}
-	
-	private void removeBook(Book book) {
-		if(book.getCopies() > 1) {
-			book.setCopies(-1);
-		} else {
-			this.books.remove(book);
-		}
-	}
-	
-	private void addBook(Book book) {
-		if(!this.books.contains(book)) {
-			this.books.add(book);
-		} else {
-			book.setCopies(1);
-		}
 	}
 }

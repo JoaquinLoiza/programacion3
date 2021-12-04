@@ -26,12 +26,10 @@ public class Solution {
 	
 	@Override
 	public String toString() {
-		
 		String students = "";
 		for(Student s : this.studentsSolution) {		
 			students += s.toString() + "\n";
 		}
-		
 		return "Los alumnos aprobados son: \n" + students;
 	}
 }
